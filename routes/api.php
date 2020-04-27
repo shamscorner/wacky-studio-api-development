@@ -14,10 +14,20 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:api')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
-Route::get('/client-test', function () {
-    return 'authenticated';
-})->middleware('client');
+// Route::get('/client-test', function () {
+//     return 'authenticated';
+// })->middleware('client');
+
+Route::middleware('auth:api')->prefix('v1')->group(function () {
+    // Users
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
+
+    // Authors
+    Route::get('/authors/{author}', 'AuthorsController@show');
+});
