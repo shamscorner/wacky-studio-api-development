@@ -27,7 +27,12 @@ class AuthorsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $author = Author::create([
+            'name' => $request->input('data.attributes.name')
+        ]);
+        return (new AuthorsResource($author))
+            ->response()
+            ->header('Location', route('authors.show', ['author' => $author]));
     }
 
     /**
