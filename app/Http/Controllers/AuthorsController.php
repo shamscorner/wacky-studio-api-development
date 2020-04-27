@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Author;
 use App\Http\Requests\CreateAuthorRequest;
+use App\Http\Requests\UpdateAuthorRequest;
 use App\Http\Resources\AuthorsResource;
 use Illuminate\Http\Request;
 
@@ -54,7 +55,7 @@ class AuthorsController extends Controller
      * @param  \App\Author  $author
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Author $author)
+    public function update(UpdateAuthorRequest $request, Author $author)
     {
         $author->update($request->input('data.attributes'));
         return new AuthorsResource($author);
