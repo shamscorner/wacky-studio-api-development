@@ -44,7 +44,6 @@ class AuthorsTest extends TestCase
 
     /**
      * @test
-     * @watch
      */
     public function It_returns_all_authors_as_a_collection_of_resource_objects()
     {
@@ -86,5 +85,41 @@ class AuthorsTest extends TestCase
                     ],
                 ]
             ]);
+    }
+
+    /**
+     * @test
+     * @watch
+     */
+    public function it_can_create_an_author_from_a_resource_object()
+    {
+        $user = factory(User::class)->create();
+        Passport::actingAs($user);
+
+        $this->postJson('/api/v1/authors', [
+            'data' => [
+                'type' => 'authors',
+                'attributes' => [
+                    'name' => 'John Doe'
+                ]
+            ]
+        ])
+        ->assertStatus(201)
+        ->assertJson([
+            "data" => [
+                "id" => '1',
+                "type" => "authors",
+                "attributes" => [
+                    'name' => 'John Doe',
+                    'created_at' => now()->setMilliseconds(0)->toJSON(),
+                    'updated_at' => now()->setMilliseconds(0)->toJSON(),
+                ]
+            ]
+        ])->assertHeader('Location', url('/api/v1/authors/1'));
+
+        $this->assertDatabaseHas('authors', [
+            'id' => 1,
+            'name' => 'John Doe'
+        ]);
     }
 }
