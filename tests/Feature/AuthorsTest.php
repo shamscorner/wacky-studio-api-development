@@ -124,7 +124,6 @@ class AuthorsTest extends TestCase
 
     /**
      * @test
-     * @watch
      */
     public function it_can_update_an_author_from_a_resource_object()
     {
@@ -161,6 +160,28 @@ class AuthorsTest extends TestCase
         $this->assertDatabaseHas('authors', [
             'id' => 1,
             'name' => 'Jane Doe'
+        ]);
+    }
+
+    /**
+     * @test
+     * @watch
+     */
+    public function it_can_delete_an_author_through_a_delete_request()
+    {
+        $user = factory(User::class)->create();
+        Passport::actingAs($user);
+
+        $author = factory(Author::class)->create();
+
+        $this->delete('/api/v1/authors/1', [], [
+            'Accept' => 'application/vnd.api+json',
+            'Content-Type' => 'application/vnd.api+json',
+        ])->assertStatus(204);
+
+        $this->assertDatabaseMissing('authors', [
+            'id' => 1,
+            'name' => $author->name,
         ]);
     }
 }
